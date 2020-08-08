@@ -6,7 +6,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 
-import com.example.s_care.FirebaseUtil;
+import com.example.s_care.auth.FirebaseUtil;
 import com.example.s_care.MainActivity;
 import com.example.s_care.R;
 import com.example.s_care.auth.AuthenticationActivity;
@@ -34,7 +34,7 @@ public class SplashScreenActivity extends AppCompatActivity {
     }
 
     private void launchApp(){
-        FirebaseUtil.initialiseFirebaseAuth(this);
+        FirebaseUtil.initialiseFirebaseAuth(null);
 
         if (FirebaseUtil.userIsLoggedIn()){
             Intent intent = new Intent(this, MainActivity.class);

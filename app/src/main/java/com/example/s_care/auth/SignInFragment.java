@@ -12,22 +12,12 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
-import com.example.s_care.FirebaseUtil;
 import com.example.s_care.R;
 
 
 public class SignInFragment extends Fragment {
 
-
     public SignInFragment() {
-    }
-
-
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        FirebaseUtil.initialiseFirebaseAuth(getContext());
-
     }
 
     @Override
@@ -62,4 +52,5 @@ public class SignInFragment extends Fragment {
             }
         });
     }
-    }
+
+}

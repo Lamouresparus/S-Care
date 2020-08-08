@@ -9,4 +9,14 @@
     <string name="sign_up">Sign up</string>
     <string name="loading">Loading…</string>
     <string name="log_out">Log Out</string>
+    <string name="first_name">First Name</string>
+    <string name="last_name">Last Name</string>
+    <string name="date_of_birth">Date Of Birth</string>
+
+    <string-array name="gender_array">
+        <item>Gender</item>
+        <item>Male</item>
+        <item>Female</item>
+        <item>Prefer not to say</item>
+    </string-array>
 </resources>
