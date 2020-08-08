@@ -147,7 +147,11 @@ public class FirebaseUtil {
     }
 
     public static void removeValueEventListener(){
-        mDatabaseReference.child(mCurrentUser.getUid()).removeEventListener(mValueEventListener);
+        if (mCurrentUser == null ){
+
+        }else {
+            mDatabaseReference.child(mCurrentUser.getUid()).removeEventListener(mValueEventListener);
+        }
     }
 
     public static void initializeValueEventListener(){
