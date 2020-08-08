@@ -158,7 +158,7 @@ public class FirebaseUtil {
         mValueEventListener = new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                Log.v("currentUser is: ", Objects.requireNonNull(snapshot.getValue()).toString() );
+//                Log.v("currentUser is: ", Objects.requireNonNull(snapshot.getValue()).toString() );
 
                 mCurrentUserDetails = snapshot.getValue(User.class);
             }
