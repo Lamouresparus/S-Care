@@ -9,6 +9,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -19,6 +20,7 @@ import androidx.fragment.app.Fragment;
 import com.example.s_care.auth.AuthenticationActivity;
 import com.example.s_care.auth.FirebaseUtil;
 import com.example.s_care.auth.LogOutCallback;
+import com.example.s_care.auth.USerCallback;
 import com.example.s_care.model.User;
 
 import static com.example.s_care.auth.FirebaseUtil.getmCurrentUser;
@@ -32,12 +34,22 @@ public class HomeFragment extends Fragment implements LogOutCallback {
 
     }
 
+    private ProgressBar progressBar;
+    private TextView textView;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
-        FirebaseUtil.initializeValueEventListener();
+        FirebaseUtil.initializeValueEventListener(new USerCallback() {
+            @Override
+            public void currentUserData(User user) {
+                textView.setText(String.format("Welcome! %s", user.getFirstName()));
+                progressBar.setVisibility(View.INVISIBLE);
+
+            }
+        });
+
         FirebaseUtil.setLogOutAuthCallback(this);
     }
 
@@ -47,16 +59,24 @@ public class HomeFragment extends Fragment implements LogOutCallback {
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_home, container, false);
 
-        }
+    }
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+
+        progressBar = view.findViewById(R.id.progress_bar);
+        textView = view.findViewById(R.id.fragment_home_tv);
+
         User user = FirebaseUtil.getUserData();
 
-        TextView textView = view.findViewById(R.id.fragment_home_tv);
-//        textView.setText(String.format("Welcome! %s", user.getFirstName()));
+        if (user != null) {
+            textView.setText(String.format("Welcome! %s", user.getFirstName()));
+        } else {
+            progressBar.setVisibility(View.VISIBLE);
+        }
+
 
     }
 
@@ -69,7 +89,7 @@ public class HomeFragment extends Fragment implements LogOutCallback {
 
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        if(item.getItemId()== R.id.log_out){
+        if (item.getItemId() == R.id.log_out) {
             FirebaseUtil.logOut();
         }
 
@@ -82,7 +102,7 @@ public class HomeFragment extends Fragment implements LogOutCallback {
         Toast.makeText(getContext(), ("Goodbye! " + getmCurrentUser()), Toast.LENGTH_SHORT).show();
         Intent intent = new Intent(getContext(), AuthenticationActivity.class);
         startActivity(intent);
-       requireActivity().finish();
+        requireActivity().finish();
     }
 
     @Override

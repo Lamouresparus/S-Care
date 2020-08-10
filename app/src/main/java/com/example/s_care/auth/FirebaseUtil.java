@@ -36,7 +36,7 @@ public class FirebaseUtil {
     private FirebaseUtil() {
     }
 
-    public static void setLogOutAuthCallback(LogOutCallback logOutCallback){
+    public static void setLogOutAuthCallback(LogOutCallback logOutCallback) {
         mLogOutCallback = logOutCallback;
     }
 
@@ -54,10 +54,10 @@ public class FirebaseUtil {
             mAuth = FirebaseAuth.getInstance();
             mFirebaseDatabase = FirebaseDatabase.getInstance();
             mDatabaseReference = mFirebaseDatabase.getReference().child(Constants.USERS_PATH);
-
-        } else {
             mCurrentUser = mAuth.getCurrentUser();
+
         }
+
     }
 
     public static void signIn(final String email, final String password) {
@@ -73,7 +73,7 @@ public class FirebaseUtil {
                         if (task.isSuccessful()) {
                             Log.v("Sigining in is successful", "Email ");
                             mCurrentUser = mAuth.getCurrentUser();
-                            mAuthCallback.authSuccessful();
+                            getUserFromDb(Objects.requireNonNull(mCurrentUser).getUid());
 
                         } else {
                             String error = Objects.requireNonNull(task.getException()).getLocalizedMessage();
@@ -121,46 +121,61 @@ public class FirebaseUtil {
         mLogOutCallback.logOutSuccessful();
     }
 
-    static void saveUserToDb(User user){
+    static void saveUserToDb(final User user) {
         user.setId(mCurrentUser.getUid());
         Task<Void> task = mDatabaseReference.child(mCurrentUser.getUid()).setValue(user);
 
         task.addOnCompleteListener(new OnCompleteListener<Void>() {
             @Override
             public void onComplete(@NonNull Task<Void> task) {
-                if(task.isSuccessful()){
+                if (task.isSuccessful()) {
+                    mCurrentUserDetails = user;
                     mAuthCallback.authSuccessful();
-                }
-                else {
+                } else {
                     mAuthCallback.authFailed(Objects.requireNonNull(task.getException()).getLocalizedMessage());
                 }
             }
         });
     }
 
-    public static User getUserData(){
+    static void getUserFromDb(String id) {
+
+        mDatabaseReference.child(id).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                mCurrentUserDetails = snapshot.getValue(User.class);
+                mAuthCallback.authSuccessful();
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+    }
+
+    public static User getUserData() {
         return mCurrentUserDetails;
     }
 
-    public static void addValueEventListener(){
+    public static void addValueEventListener() {
         mDatabaseReference.child(mCurrentUser.getUid()).addValueEventListener(mValueEventListener);
     }
 
-    public static void removeValueEventListener(){
-        if (mCurrentUser == null ){
-
-        }else {
+    public static void removeValueEventListener() {
+        if (mCurrentUser != null) {
             mDatabaseReference.child(mCurrentUser.getUid()).removeEventListener(mValueEventListener);
         }
     }
 
-    public static void initializeValueEventListener(){
+    public static void initializeValueEventListener(final USerCallback callback) {
         mValueEventListener = new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
 //                Log.v("currentUser is: ", Objects.requireNonNull(snapshot.getValue()).toString() );
 
                 mCurrentUserDetails = snapshot.getValue(User.class);
+                callback.currentUserData(mCurrentUserDetails);
             }
 
             @Override
