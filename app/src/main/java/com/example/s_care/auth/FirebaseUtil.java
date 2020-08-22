@@ -1,12 +1,15 @@
 package com.example.s_care.auth;
 
+import android.net.Uri;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
 
 import com.example.s_care.Constants;
+import com.example.s_care.home.UploadPhotoCallback;
 import com.example.s_care.model.User;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
@@ -18,6 +21,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 
 import java.util.Objects;
 
@@ -36,6 +40,7 @@ public class FirebaseUtil {
     private static LogOutCallback mLogOutCallback;
     private static FirebaseStorage mStorage;
     private static StorageReference mStorageReference;
+    private static UploadPhotoCallback mUploadPhotoCallback;
 
     private FirebaseUtil() {
     }
@@ -193,5 +198,40 @@ public class FirebaseUtil {
         };
 
         addValueEventListener();
+    }
+
+    public static void uploadPhoto(UploadPhotoCallback callback, Uri file){
+        mUploadPhotoCallback = callback;
+        final StorageReference ref = mStorageReference.child("images/"+ file.getLastPathSegment());
+        mUploadPhotoCallback.showProgressBar(true);
+        Log.v("Upload Image : ", "storageRef: "+ref.toString());
+
+        ref.putFile(file).addOnCompleteListener(new OnCompleteListener<UploadTask.TaskSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<UploadTask.TaskSnapshot> task) {
+                Log.v("Upload Image : ", "UploadCompleted: ");
+                mUploadPhotoCallback.showProgressBar(false);
+                if(task.isSuccessful()){
+                    ref.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+                        @Override
+                        public void onSuccess(Uri uri) {
+                            Log.v("Upload Image : ", "imageUrlGotten: "+uri.toString());
+                            mCurrentUserDetails.setImageUrl(uri.toString());
+                            mUploadPhotoCallback.uploadSuccessful(uri.toString());
+
+                        }
+                    });
+                }
+
+                else {
+                    Log.v("Upload Image : ", "UploadFailed: ");
+
+                    mUploadPhotoCallback.uploadFailed(Objects.requireNonNull(task.getException()).getLocalizedMessage());
+
+                }
+
+            }
+        });
+
     }
 }

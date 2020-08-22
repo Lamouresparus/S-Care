@@ -104,7 +104,7 @@ public class SignUpFragment extends Fragment implements AdapterView.OnItemSelect
                     return;
                 }
 
-                User user = new User(firstName, lastName, email, dateOfBirth, gender);
+                User user = new User(firstName, lastName, email, dateOfBirth, gender, null);
 
                 FirebaseUtil.signUp(user,password);
 

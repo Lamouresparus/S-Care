@@ -1,4 +1,4 @@
-package com.example.s_care;
+package com.example.s_care.home;
 
 import android.os.Bundle;
 
@@ -12,6 +12,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.example.s_care.R;
 import com.example.s_care.custom.DoctorCategoryAdapter;
 import com.example.s_care.custom.DoctorListAdapter;
 import com.example.s_care.model.Doctor;

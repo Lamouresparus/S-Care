@@ -10,8 +10,8 @@ import androidx.annotation.NonNull;
 import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.s_care.HomeFragmentDirections;
 import com.example.s_care.R;
+import com.example.s_care.home.HomeFragmentDirections;
 import com.example.s_care.model.DoctorCategory;
 
 import java.util.List;

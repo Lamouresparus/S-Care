@@ -7,7 +7,7 @@ import android.os.Bundle;
 import android.os.Handler;
 
 import com.example.s_care.auth.FirebaseUtil;
-import com.example.s_care.MainActivity;
+import com.example.s_care.home.MainActivity;
 import com.example.s_care.R;
 import com.example.s_care.auth.AuthenticationActivity;
 

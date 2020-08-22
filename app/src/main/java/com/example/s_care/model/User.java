@@ -12,12 +12,13 @@ public class User {
     public User() {
     }
 
-    public User(String firstName, String lastName, String email, String dateOfBirth, String gender) {
+    public User(String firstName, String lastName, String email, String dateOfBirth, String gender, String imageUrl) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.email = email;
         this.dateOfBirth = dateOfBirth;
         this.gender = gender;
+        this.imageUrl = imageUrl;
     }
 
     public String getFirstName() {

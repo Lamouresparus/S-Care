@@ -1,9 +1,7 @@
-package com.example.s_care;
+package com.example.s_care.home;
 
 import android.content.Intent;
-import android.content.res.Resources;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -23,6 +21,7 @@ import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.s_care.R;
 import com.example.s_care.auth.AuthenticationActivity;
 import com.example.s_care.auth.FirebaseUtil;
 import com.example.s_care.auth.LogOutCallback;
@@ -130,7 +129,7 @@ public class HomeFragment extends Fragment implements LogOutCallback {
         textView.setVisibility(View.INVISIBLE);
         findDocByCat.setVisibility(View.INVISIBLE);
         doctorCategoryRv.setVisibility(View.INVISIBLE);
-        cardView.setVisibility(View.VISIBLE);
+        cardView.setVisibility(View.INVISIBLE);
 
 
 

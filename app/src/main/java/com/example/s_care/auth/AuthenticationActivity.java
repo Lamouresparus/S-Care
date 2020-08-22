@@ -9,7 +9,7 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.viewpager.widget.ViewPager;
 
-import com.example.s_care.MainActivity;
+import com.example.s_care.home.MainActivity;
 import com.example.s_care.R;
 import com.google.android.material.tabs.TabLayout;
 
