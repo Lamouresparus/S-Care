@@ -14,7 +14,7 @@
         android:drawablePadding="16dp"
         android:text="@string/app_name"
         android:textAppearance="@android:style/TextAppearance.Material.Large"
-        android:textColor="@color/colorAccent"
+        android:textColor="@color/light"
         android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"

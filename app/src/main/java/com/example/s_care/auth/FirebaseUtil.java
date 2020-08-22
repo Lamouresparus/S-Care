@@ -16,6 +16,8 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 
 import java.util.Objects;
 
@@ -32,6 +34,8 @@ public class FirebaseUtil {
     private static FirebaseAuth.AuthStateListener mAuthListener;
     private static AuthCallback mAuthCallback;
     private static LogOutCallback mLogOutCallback;
+    private static FirebaseStorage mStorage;
+    private static StorageReference mStorageReference;
 
     private FirebaseUtil() {
     }
@@ -52,6 +56,8 @@ public class FirebaseUtil {
         if (firebaseUtil == null) {
             firebaseUtil = new FirebaseUtil();
             mAuth = FirebaseAuth.getInstance();
+            mStorage = FirebaseStorage.getInstance();
+            mStorageReference = mStorage.getReference().child(Constants.PROFILE_PHOTO_PATH);
             mFirebaseDatabase = FirebaseDatabase.getInstance();
             mDatabaseReference = mFirebaseDatabase.getReference().child(Constants.USERS_PATH);
             mCurrentUser = mAuth.getCurrentUser();
