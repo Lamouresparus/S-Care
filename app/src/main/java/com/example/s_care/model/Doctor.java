@@ -2,18 +2,23 @@ package com.example.s_care.model;
 
 public class Doctor {
     private String name;
+    private String category;
     private String education;
     private String imageUrl;
     private  double rating;
     private  int numberOfPatients;
     private String phoneNumber;
 
-    public Doctor(String name, String education, double rating, int numberOfPatients, String phoneNumber) {
+    public Doctor(){}
+
+    public Doctor(String category, String name, String education, double rating, int numberOfPatients, String phoneNumber , String image) {
+        this.category = category;
         this.name = name;
         this.education = education;
         this.rating = rating;
         this.numberOfPatients = numberOfPatients;
         this.phoneNumber = phoneNumber;
+        imageUrl = image;
     }
 
     public String getName() {

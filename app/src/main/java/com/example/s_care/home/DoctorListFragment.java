@@ -11,8 +11,10 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import com.example.s_care.R;
+import com.example.s_care.auth.FirebaseUtil;
 import com.example.s_care.custom.DoctorCategoryAdapter;
 import com.example.s_care.custom.DoctorListAdapter;
 import com.example.s_care.model.Doctor;
@@ -39,11 +41,19 @@ public class DoctorListFragment extends Fragment {
     private RecyclerView.LayoutManager layoutManager;
     private List<Doctor> doctors;
     private DoctorListAdapter doctorListAdapter;
+    String categoryName;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        DoctorListFragmentArgs doctorListFragmentArgs = DoctorListFragmentArgs.fromBundle(getArguments());
+        categoryName = doctorListFragmentArgs.getCategoryName();
+        Doctor doctor = new Doctor(categoryName, "John Francis", "PHD Child care", 4.5, 780,"08052258867", "");
+        FirebaseUtil.saveDoctorToDb(doctor);
+        doctors = FirebaseUtil.getDoctor(categoryName);
+
     }
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -56,9 +66,10 @@ public class DoctorListFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         doctorRv = view.findViewById(R.id.doctor_rv);
+        TextView textView = view.findViewById(R.id.findDocByCat);
+        textView.setText(categoryName);
         layoutManager = new LinearLayoutManager(requireContext(), RecyclerView.VERTICAL,false);
         doctorRv.setLayoutManager(layoutManager);
-        createDoctorList();
         doctorListAdapter = new DoctorListAdapter(doctors);
         doctorRv.setAdapter(doctorListAdapter);
 
@@ -66,7 +77,7 @@ public class DoctorListFragment extends Fragment {
 
     private void createDoctorList() {
         doctors = new ArrayList<>();
-        Doctor doctor = new Doctor("John Francis", "PHD Child care", 4.5, 780,"08052258867");
+        Doctor doctor = new Doctor("","John Francis", "PHD Child care", 4.5, 780,"08052258867","");
         doctors.add(doctor);
         doctors.add(doctor);
         doctors.add(doctor);

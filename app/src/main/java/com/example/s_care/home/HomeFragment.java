@@ -52,6 +52,7 @@ public class HomeFragment extends Fragment implements LogOutCallback {
     private ImageView profileImage;
     private TextView findDocByCat;
     private CardView cardView;
+    private User mUser;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -60,6 +61,7 @@ public class HomeFragment extends Fragment implements LogOutCallback {
         FirebaseUtil.initializeValueEventListener(new USerCallback() {
             @Override
             public void currentUserData(User user) {
+                mUser = user;
                 textView.setText(String.format("Hello %s", user.getFirstName()));
                 progressBar.setVisibility(View.INVISIBLE);
                 showViews();
@@ -113,11 +115,12 @@ public class HomeFragment extends Fragment implements LogOutCallback {
         doctorCategoryAdapter = new DoctorCategoryAdapter(doctorCategories);
         doctorCategoryRv.setAdapter(doctorCategoryAdapter);
 
-        User user = FirebaseUtil.getUserData();
+       // mUser = FirebaseUtil.getUserData();
 
-        if (user != null) {
-            textView.setText(String.format("Hello %s", user.getFirstName()));
+        if (mUser != null) {
+            textView.setText(String.format("Hello %s", mUser.getFirstName()));
             showViews();
+            showImage(mUser.getImageUrl());
         } else {
             progressBar.setVisibility(View.VISIBLE);
             hideViews();
@@ -147,12 +150,12 @@ public class HomeFragment extends Fragment implements LogOutCallback {
     private void loadDoctorCategries() {
         doctorCategories = new ArrayList<>();
         DoctorCategory eyeCare = new DoctorCategory("Optician", R.drawable.ic_baseline_remove_red_eye_24);
-        DoctorCategory childSpecialist = new DoctorCategory("Child Sp-ecialist", R.drawable.ic_baby_face);
+        DoctorCategory childSpecialist = new DoctorCategory("Child Specialist", R.drawable.ic_baby_face);
         DoctorCategory dentist = new DoctorCategory("Dentist", R.drawable.ic_tooth);
-        DoctorCategory lungsSpecialist = new DoctorCategory("Lungs S-pecialist", R.drawable.ic_lungs);
-        DoctorCategory neurologist = new DoctorCategory("Neurolo-gist", R.drawable.ic_brain_line);
-        DoctorCategory obstetrician = new DoctorCategory("Obstetri-cian", R.drawable.ic_pregnancy);
-        DoctorCategory orthopaedicSurgeon = new DoctorCategory("Ortho-paedic Surgeon", R.drawable.ic_knee_joint_pain);
+        DoctorCategory lungsSpecialist = new DoctorCategory("Lungs Specialist", R.drawable.ic_lungs);
+        DoctorCategory neurologist = new DoctorCategory("Neurologist", R.drawable.ic_brain_line);
+        DoctorCategory obstetrician = new DoctorCategory("Obstetrician", R.drawable.ic_pregnancy);
+        DoctorCategory orthopaedicSurgeon = new DoctorCategory("Orthopaedic Surgeon", R.drawable.ic_knee_joint_pain);
 
 
 

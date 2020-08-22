@@ -52,7 +52,7 @@ public class DoctorCategoryAdapter extends RecyclerView.Adapter<DoctorCategoryAd
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Navigation.findNavController(v).navigate(HomeFragmentDirections.actionHomeFragmentToDoctorListFragment());
+                    Navigation.findNavController(v).navigate(HomeFragmentDirections.actionHomeFragmentToDoctorListFragment().setCategoryName(textView.getText().toString()));
                 }
             });
         }

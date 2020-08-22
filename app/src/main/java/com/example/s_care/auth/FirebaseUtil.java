@@ -4,9 +4,11 @@ import android.net.Uri;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 import com.example.s_care.Constants;
 import com.example.s_care.home.UploadPhotoCallback;
+import com.example.s_care.model.Doctor;
 import com.example.s_care.model.User;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -14,15 +16,19 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 
@@ -41,6 +47,7 @@ public class FirebaseUtil {
     private static FirebaseStorage mStorage;
     private static StorageReference mStorageReference;
     private static UploadPhotoCallback mUploadPhotoCallback;
+    private static DatabaseReference doctorsDbRef;
 
     private FirebaseUtil() {
     }
@@ -65,6 +72,7 @@ public class FirebaseUtil {
             mStorageReference = mStorage.getReference().child(Constants.PROFILE_PHOTO_PATH);
             mFirebaseDatabase = FirebaseDatabase.getInstance();
             mDatabaseReference = mFirebaseDatabase.getReference().child(Constants.USERS_PATH);
+            doctorsDbRef = mFirebaseDatabase.getReference().child(Constants.DOCTORS_PATH);
             mCurrentUser = mAuth.getCurrentUser();
 
         }
@@ -240,4 +248,56 @@ public class FirebaseUtil {
         });
 
     }
+
+    public static void saveDoctorToDb(Doctor doctor) {
+        Task<Void> task = doctorsDbRef.push().setValue(doctor);
+
+        task.addOnCompleteListener(new OnCompleteListener<Void>() {
+            @Override
+            public void onComplete(@NonNull Task<Void> task) {
+                if (task.isSuccessful()) {
+                    Log.v("doctor upload is ", "sucessful");
+                } else {
+                    Log.v("doctor upload is ", "failed");
+                }
+            }
+        });
+    }
+
+    public static List<Doctor>  getDoctor(String sortType){
+        final List<Doctor> doctors = new ArrayList<>();
+        Query query = doctorsDbRef. orderByChild("category").equalTo(sortType);
+        query.addChildEventListener(new ChildEventListener() {
+            @Override
+            public void onChildAdded(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
+                Log.v("doctor details gotten", snapshot.getValue(Doctor.class).getName());
+                doctors.add(snapshot.getValue(Doctor.class));
+            }
+
+            @Override
+            public void onChildChanged(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
+
+            }
+
+            @Override
+            public void onChildRemoved(@NonNull DataSnapshot snapshot) {
+
+            }
+
+            @Override
+            public void onChildMoved(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+
+        return doctors;
+
+    }
+
+
 }

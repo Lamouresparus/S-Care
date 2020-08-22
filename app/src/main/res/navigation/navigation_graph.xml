@@ -20,7 +20,12 @@
         android:id="@+id/doctorListFragment"
         android:name="com.example.s_care.home.DoctorListFragment"
         android:label="fragment_doctor_list"
-        tools:layout="@layout/fragment_doctor_list" />
+        tools:layout="@layout/fragment_doctor_list" >
+        <argument
+            android:name="CategoryName"
+            app:argType="string"
+            android:defaultValue="All Categories" />
+    </fragment>
     <fragment
         android:id="@+id/profileFragment"
         android:name="com.example.s_care.home.ProfileFragment"
