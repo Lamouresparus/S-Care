@@ -29,6 +29,7 @@ import com.example.s_care.auth.USerCallback;
 import com.example.s_care.custom.DoctorCategoryAdapter;
 import com.example.s_care.model.DoctorCategory;
 import com.example.s_care.model.User;
+import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -62,12 +63,20 @@ public class HomeFragment extends Fragment implements LogOutCallback {
                 textView.setText(String.format("Hello %s", user.getFirstName()));
                 progressBar.setVisibility(View.INVISIBLE);
                 showViews();
+                showImage(user.getImageUrl());
 
 
             }
         });
 
         FirebaseUtil.setLogOutAuthCallback(this);
+    }
+
+    private void showImage(String imageUrl) {
+        if (imageUrl != null && !imageUrl.isEmpty()) {
+            Picasso.get().load(imageUrl)
+                    .into(profileImage);
+        }
     }
 
     private void showViews() {

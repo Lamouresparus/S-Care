@@ -215,10 +215,16 @@ public class FirebaseUtil {
                     ref.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
                         @Override
                         public void onSuccess(Uri uri) {
-                            Log.v("Upload Image : ", "imageUrlGotten: "+uri.toString());
-                            mCurrentUserDetails.setImageUrl(uri.toString());
-                            mUploadPhotoCallback.uploadSuccessful(uri.toString());
+                            final  String url = uri.toString();
+                            //mCurrentUserDetails.setImageUrl(uri.toString());
+                            mDatabaseReference.child(mCurrentUser.getUid()).child("imageUrl").setValue(url).addOnSuccessListener(new OnSuccessListener<Void>() {
+                                @Override
+                                public void onSuccess(Void aVoid) {
+                                    Log.v("Upload Image : ", "imageUrlGottenAndUploaded: "+getUserData().getImageUrl());
+                                    mUploadPhotoCallback.uploadSuccessful(url);
 
+                                }
+                            });
                         }
                     });
                 }
