@@ -48,4 +48,8 @@ public class Doctor {
     public void setImageUrl(String imageUrl) {
         this.imageUrl = imageUrl;
     }
+
+    public String getCategory() {
+        return category;
+    }
 }

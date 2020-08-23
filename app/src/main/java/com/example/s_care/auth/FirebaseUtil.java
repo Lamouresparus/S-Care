@@ -7,6 +7,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import com.example.s_care.Constants;
+import com.example.s_care.custom.SortDoctorCallback;
 import com.example.s_care.home.UploadPhotoCallback;
 import com.example.s_care.model.Doctor;
 import com.example.s_care.model.User;
@@ -27,8 +28,6 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Objects;
 
 
@@ -48,6 +47,7 @@ public class FirebaseUtil {
     private static StorageReference mStorageReference;
     private static UploadPhotoCallback mUploadPhotoCallback;
     private static DatabaseReference doctorsDbRef;
+    private static SortDoctorCallback sortDoctorCallback;
 
     private FirebaseUtil() {
     }
@@ -264,14 +264,14 @@ public class FirebaseUtil {
         });
     }
 
-    public static List<Doctor>  getDoctor(String sortType){
-        final List<Doctor> doctors = new ArrayList<>();
+    public static void  getDoctor(String sortType, SortDoctorCallback callback){
+        sortDoctorCallback = callback;
         Query query = doctorsDbRef. orderByChild("category").equalTo(sortType);
         query.addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
-                Log.v("doctor details gotten", snapshot.getValue(Doctor.class).getName());
-                doctors.add(snapshot.getValue(Doctor.class));
+                Log.v("doctor details gotten", Objects.requireNonNull(snapshot.getValue(Doctor.class)).getName());
+                sortDoctorCallback.onChildAdded(snapshot);
             }
 
             @Override
@@ -294,8 +294,6 @@ public class FirebaseUtil {
 
             }
         });
-
-        return doctors;
 
     }
 

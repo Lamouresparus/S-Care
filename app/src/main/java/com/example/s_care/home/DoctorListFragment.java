@@ -1,5 +1,8 @@
 package com.example.s_care.home;
 
+import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.net.Uri;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -8,6 +11,7 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -41,16 +45,18 @@ public class DoctorListFragment extends Fragment {
     private RecyclerView.LayoutManager layoutManager;
     private List<Doctor> doctors;
     private DoctorListAdapter doctorListAdapter;
-    String categoryName;
+    private String categoryName;
+    private DoctorListAdapter.OpenDialerListener openDialerListener;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        assert getArguments() != null;
         DoctorListFragmentArgs doctorListFragmentArgs = DoctorListFragmentArgs.fromBundle(getArguments());
         categoryName = doctorListFragmentArgs.getCategoryName();
-        Doctor doctor = new Doctor(categoryName, "John Francis", "PHD Child care", 4.5, 780,"08052258867", "");
-        FirebaseUtil.saveDoctorToDb(doctor);
-        doctors = FirebaseUtil.getDoctor(categoryName);
+        Log.v("category name is ", categoryName);
+//        Doctor doctor = new Doctor(categoryName, "John Francis", "PHD Child care", 4.5, 780,"08052258867", "");
+//        FirebaseUtil.saveDoctorToDb(doctor);
 
     }
 
@@ -70,17 +76,25 @@ public class DoctorListFragment extends Fragment {
         textView.setText(categoryName);
         layoutManager = new LinearLayoutManager(requireContext(), RecyclerView.VERTICAL,false);
         doctorRv.setLayoutManager(layoutManager);
-        doctorListAdapter = new DoctorListAdapter(doctors);
+        initalizeOpenDialerListener();
+        doctorListAdapter = new DoctorListAdapter(categoryName, openDialerListener);
         doctorRv.setAdapter(doctorListAdapter);
 
     }
 
-    private void createDoctorList() {
-        doctors = new ArrayList<>();
-        Doctor doctor = new Doctor("","John Francis", "PHD Child care", 4.5, 780,"08052258867","");
-        doctors.add(doctor);
-        doctors.add(doctor);
-        doctors.add(doctor);
-        doctors.add(doctor);
+    private void initalizeOpenDialerListener() {
+        openDialerListener = new DoctorListAdapter.OpenDialerListener() {
+            @Override
+            public void onBook(String phoneNumber) {
+                Intent intent = new Intent(Intent.ACTION_DIAL);
+                intent.setData(Uri.parse("tel:"+phoneNumber));
+
+                if(intent.resolveActivity(requireActivity().getPackageManager())!=null){
+                    startActivity(intent);
+
+                }
+            }
+        };
     }
+
 }
